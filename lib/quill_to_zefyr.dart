@@ -8,14 +8,14 @@ Delta convertIterableToDelta(
   try {
     var finalZefyrData = [];
     list.toList().forEach((quillNode) {
-      var finalZefyrNode = {};
+      var item = {};
       // print(quillNode);
-      var quillInsertNode = quillNode['insert'];
-      var quillAttributesNode = quillNode['attributes'];
-      if (quillAttributesNode != null) {
+      var insertNode = quillNode['insert'];
+      var attrNode = quillNode['attributes'];
+      if (attrNode != null) {
         var finalZefyrAttributes = {};
-        if (quillAttributesNode is Map) {
-          quillAttributesNode.keys.forEach((attrKey) {
+        if (attrNode is Map) {
+          attrNode.keys.forEach((attrKey) {
             /// Already supported
             if ([
               'b',
@@ -24,7 +24,7 @@ Delta convertIterableToDelta(
               'heading',
               'a',
             ].contains(attrKey)) {
-              finalZefyrAttributes[attrKey] = quillAttributesNode[attrKey];
+              finalZefyrAttributes[attrKey] = attrNode[attrKey];
             }
 
             /// Known but not supported
@@ -38,13 +38,13 @@ Delta convertIterableToDelta(
                 finalZefyrAttributes['i'] = true;
               } else if (attrKey == 'blockquote') {
                 finalZefyrAttributes['block'] = 'quote';
-              } else if (attrKey == 'embed' && quillAttributesNode[attrKey]['type'] == 'dots') {
+              } else if (attrKey == 'embed' && attrNode[attrKey]['type'] == 'dots') {
                 finalZefyrAttributes['embed'] = {'type': 'hr'};
               }
 
               /// Headers
               else if (attrKey == 'header') {
-                finalZefyrAttributes['heading'] = quillAttributesNode[attrKey] ?? 1;
+                finalZefyrAttributes['heading'] = attrNode[attrKey] ?? 1;
               } else if (attrKey == 'h1') {
                 finalZefyrAttributes['heading'] = 1;
               } else if (attrKey == 'h2') {
@@ -61,12 +61,12 @@ Delta convertIterableToDelta(
 
               /// Link
               else if (attrKey == 'link') {
-                finalZefyrAttributes['a'] = quillAttributesNode[attrKey] ?? 'n/a';
+                finalZefyrAttributes['a'] = attrNode[attrKey] ?? 'n/a';
               }
 
               /// List
               else if (attrKey == 'list') {
-                finalZefyrAttributes['block'] = quillAttributesNode[attrKey] == 'bullet' ? 'ul' : 'ol';
+                finalZefyrAttributes['block'] = attrNode[attrKey] == 'bullet' ? 'ul' : 'ol';
               }
 
               /// Not supported
@@ -75,62 +75,71 @@ Delta convertIterableToDelta(
               }
             }
           });
-          if (finalZefyrAttributes.keys.isNotEmpty) finalZefyrNode['attributes'] = finalZefyrAttributes;
+          if (finalZefyrAttributes.keys.isNotEmpty) item['attributes'] = finalZefyrAttributes;
         }
       }
-      if (quillInsertNode != null) {
+      if (insertNode != null) {
+        bool addPreBreak = false;
         bool addBreak = false;
 
         /// Map embed
-        if (quillInsertNode is Map) {
+        if (insertNode is Map) {
           /// Image
-          if (quillInsertNode.containsKey('image')) {
-            final image = quillInsertNode['image'];
+          if (insertNode.containsKey('image')) {
+            final image = insertNode['image'];
             if (image is String) {
-              var attrs = {
-                'embed': {
-                  'type': 'image',
-                  'source': image,
+              item = {
+                'insert': '​',
+                'attributes': {
+                  'embed': {
+                    'type': 'image',
+                    'source': image,
+                  }
                 }
               };
-              finalZefyrNode['insert'] = '';
-              finalZefyrNode['attributes'] = attrs;
               addBreak = true;
             }
           }
 
           /// Divider
-          else if (quillInsertNode.containsKey('divider')) {
-            Map<String, dynamic> attrs = {
-              'embed': {'type': 'hr'}
+          else if (insertNode.containsKey('divider')) {
+            item = {
+              'insert': '​',
+              'attributes': {
+                'embed': {'type': 'hr'}
+              }
             };
-            finalZefyrNode['insert'] = '';
-            finalZefyrNode['attributes'] = attrs;
             addBreak = true;
           }
         }
 
         /// String embed
         else {
-          finalZefyrNode['insert'] = quillInsertNode;
+          item['insert'] = insertNode;
         }
 
-        if (finalZefyrNode['insert'] == null && helper != null) {
-          finalZefyrNode = helper.insertNode(quillInsertNode, finalZefyrNode);
+        if (item['insert'] == null && helper != null) {
+          item = helper.insertNode(insertNode, item);
           addBreak = true;
         }
 
-        if (finalZefyrNode['insert'] != null) {
-          finalZefyrData.add(finalZefyrNode);
+        if (item['insert'] != null) {
+          if (addPreBreak) {
+            finalZefyrData.add({'insert': ''});
+          }
+
+          finalZefyrData.add(item);
 
           if (addBreak) {
             finalZefyrData.add({'insert': '\n'});
           }
         } else {
-          print('Not Valid: $quillInsertNode');
+          print('Not Valid: $insertNode');
         }
       }
     });
+
+    // print('finalZefyrData: $finalZefyrData');
 
     return Delta.fromJson(finalZefyrData)..insert('\n');
   } catch (e) {

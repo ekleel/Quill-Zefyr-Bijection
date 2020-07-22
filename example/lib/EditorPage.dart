@@ -68,22 +68,12 @@ class EditorPageState extends State<EditorPage> {
   NotusDocument _loadDocument() {
     try {
       Delta d = QuillZefyrBijection.convertJSONToZefyrDelta(
-        jsonEncode(QUILL_TO_ZEFYR_COMPLEX_JSON_2),
+        jsonEncode(QUILL_TO_ZEFYR_COMPLEX_JSON),
         // QUILL_TO_ZEFYR_SAMPLE,
         helper: QuillZefyrBijectionHelper(
-          insertNode: (node, list) {
-            // print('loadDocument Node: $node');
-            // var attrs = {
-            //   'embed': {
-            //     'type': 'image',
-            //     'source':
-            //         'image:https://firebasestorage.googleapis.com/v0/b/kilmaapp.appspot.com/o/users%2F9ukEt3oZUGUdzHz2JhElKKkGuw42%2Fimages%2FoJ%40VaWlNu%23un(qbvAboqHkBg)%401000.jpeg?alt=media',
-            //   }
-            // };
-            // list['insert'] = '\n';
-            // list['attributes'] = attrs;
-            list = {
-              'insert': '​',
+          insertNode: (node, item) {
+            item = {
+              'insert': '',
               'attributes': {
                 'embed': {
                   'type': 'image',
@@ -92,7 +82,7 @@ class EditorPageState extends State<EditorPage> {
                 }
               }
             };
-            return list;
+            return item;
           },
         ),
       );
