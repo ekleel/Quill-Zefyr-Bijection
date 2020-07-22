@@ -87,7 +87,6 @@ Delta convertIterableToDelta(
           if (quillInsertNode.containsKey('image')) {
             final image = quillInsertNode['image'];
             if (image is String) {
-              print('image: $image');
               var attrs = {
                 'embed': {
                   'type': 'image',
@@ -107,6 +106,7 @@ Delta convertIterableToDelta(
             };
             finalZefyrNode['insert'] = '';
             finalZefyrNode['attributes'] = attrs;
+            addBreak = true;
           }
         }
 
@@ -117,7 +117,6 @@ Delta convertIterableToDelta(
 
         if (finalZefyrNode['insert'] == null && helper != null) {
           finalZefyrNode = helper.insertNode(quillInsertNode, finalZefyrNode);
-          // print('finalZefyrNode convert: $finalZefyrNode');
           addBreak = true;
         }
 
@@ -133,7 +132,6 @@ Delta convertIterableToDelta(
       }
     });
 
-    print('finalZefyrData: $finalZefyrData');
     return Delta.fromJson(finalZefyrData)..insert('\n');
   } catch (e) {
     rethrow;
