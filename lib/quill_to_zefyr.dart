@@ -141,7 +141,7 @@ Delta convertIterableToDelta(
 
     // print('finalZefyrData: $finalZefyrData');
 
-    return Delta.fromJson(finalZefyrData)..insert('\n');
+    return Delta.fromJson(finalZefyrData);
   } catch (e) {
     rethrow;
   }
