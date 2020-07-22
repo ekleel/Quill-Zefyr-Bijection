@@ -8,8 +8,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  
+  image_picker: 0.6.6+5
+  
   quill_delta: ^1.0.2
-  zefyr: ^0.10.0
+  # zefyr: ^0.10.0
+  zefyr:
+    git:
+      url: git://github.com/ekleel/zefyr.git
+      path: "packages/zefyr"
+      ref: 7ae1d62e1887e5878ad1fe511270c6022ca3e874
+      # ref: b31e59c4bf953a74b2331fb473e3aa83fc9461a1
+        # -- for stable
   quill_zefyr_bijection: 
     path: "../"
   cupertino_icons: ^0.1.2

@@ -1,8 +1,12 @@
 import 'dart:convert';
 
 import 'package:quill_delta/quill_delta.dart';
+import 'package:quill_zefyr_bijection/models/m.helper.dart';
 
-String convertIterableToQuillJSON(Delta list) {
+String convertIterableToQuillJSON(
+  Delta list, {
+  QuillZefyrBijectionHelper helper,
+}) {
   try {
     var finalZefyrData = [];
     list.toList().forEach((operation) {
@@ -15,42 +19,39 @@ String convertIterableToQuillJSON(Delta list) {
         var finalZefyrAttributes = {};
 
         quillAttributesNode.keys.forEach((attrKey) {
-          if (attrKey == "b")
-            finalZefyrAttributes["bold"] = true;
-          else if (attrKey == "i")
-            finalZefyrAttributes["italic"] = true;
-          else if (attrKey == "a")
-            finalZefyrAttributes["link"] =
-                quillAttributesNode[attrKey] ?? "n/a";
-          else if (attrKey == "block" &&
-              quillAttributesNode[attrKey] == "quote")
-            finalZefyrAttributes["blockquote"] = true;
-          else if (attrKey == "embed" &&
-              quillAttributesNode[attrKey] == "type" &&
-              quillAttributesNode[attrKey]["type"] == "hr")
-            finalZefyrAttributes["embed"] = {"type": "dots"};
-          else if (attrKey == "embed" &&
-              quillAttributesNode[attrKey] == "type" &&
-              quillAttributesNode[attrKey]["type"] == "image") {
-            finalZefyrNode["insert"] = quillAttributesNode[attrKey]["source"];
-          } else if (attrKey == "heading")
-            finalZefyrAttributes["header"] = quillAttributesNode[attrKey] ?? 1;
+          if (attrKey == 'b')
+            finalZefyrAttributes['bold'] = true;
+          else if (attrKey == 'i')
+            finalZefyrAttributes['italic'] = true;
+          else if (attrKey == 'a')
+            finalZefyrAttributes['link'] = quillAttributesNode[attrKey] ?? 'n/a';
+          else if (attrKey == 'block' && quillAttributesNode[attrKey] == 'quote')
+            finalZefyrAttributes['blockquote'] = true;
+          else if (attrKey == 'embed' &&
+              quillAttributesNode[attrKey] == 'type' &&
+              quillAttributesNode[attrKey]['type'] == 'hr')
+            finalZefyrAttributes['embed'] = {'type': 'dots'};
+          else if (attrKey == 'embed' &&
+              quillAttributesNode[attrKey] == 'type' &&
+              quillAttributesNode[attrKey]['type'] == 'image') {
+            finalZefyrNode['insert'] = quillAttributesNode[attrKey]['source'];
+          } else if (attrKey == 'heading')
+            finalZefyrAttributes['header'] = quillAttributesNode[attrKey] ?? 1;
           else {
-            print("ignoring " + attrKey);
+            print('ignoring ' + attrKey);
           }
         });
-        if (finalZefyrAttributes.keys.length > 0)
-          finalZefyrNode["attributes"] = finalZefyrAttributes;
+        if (finalZefyrAttributes.keys.isNotEmpty) finalZefyrNode['attributes'] = finalZefyrAttributes;
       }
       if (quillInsertNode != null) {
         {
-          finalZefyrNode["insert"] = quillInsertNode;
+          finalZefyrNode['insert'] = quillInsertNode;
         }
         finalZefyrData.add(finalZefyrNode);
       }
     });
-    return jsonEncode({"ops": finalZefyrData});
+    return jsonEncode({'ops': finalZefyrData});
   } catch (e) {
-    throw e;
+    rethrow;
   }
 }

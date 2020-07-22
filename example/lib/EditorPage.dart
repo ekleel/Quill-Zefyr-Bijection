@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:quill_delta/quill_delta.dart';
 import 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
 import 'package:zefyr/zefyr.dart';
+import 'package:zefyr_quill/images.dart';
 
 import 'constants.dart';
 
@@ -32,26 +35,28 @@ class EditorPageState extends State<EditorPage> {
     // one of its parents.
     return Scaffold(
       appBar: AppBar(
-        title: Text("Editor page"),
+        title: const Text('Editor page'),
         actions: <Widget>[
           IconButton(
             onPressed: () {
-              var res = QuillZefyrBijection.convertDeltaIterableToQuillJSON(
-                  _controller.document.toDelta());
-              Scaffold.of(context)
-                  .showBottomSheet((context) => SingleChildScrollView(
-                          child: Text(
-                        res,
-                        style: Theme.of(context).textTheme.caption,
-                      )));
+              var res = QuillZefyrBijection.convertDeltaIterableToQuillJSON(_controller.document.toDelta());
+              Scaffold.of(context).showBottomSheet(
+                (context) => SingleChildScrollView(
+                  child: Text(
+                    res,
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ),
+              );
             },
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
           )
         ],
       ),
       body: ZefyrScaffold(
         child: ZefyrEditor(
-          padding: EdgeInsets.all(16),
+          imageDelegate: CustomImageDelegate(),
+          padding: const EdgeInsets.all(16),
           controller: _controller,
           focusNode: _focusNode,
         ),
@@ -62,12 +67,41 @@ class EditorPageState extends State<EditorPage> {
   /// Loads the document to be edited in Zefyr.
   NotusDocument _loadDocument() {
     try {
-      Delta d =
-          QuillZefyrBijection.convertJSONToZefyrDelta(QUILL_TO_ZEFYR_SAMPLE);
+      Delta d = QuillZefyrBijection.convertJSONToZefyrDelta(
+        jsonEncode(QUILL_TO_ZEFYR_COMPLEX_JSON_2),
+        // QUILL_TO_ZEFYR_SAMPLE,
+        helper: QuillZefyrBijectionHelper(
+          insertNode: (node, list) {
+            // print('loadDocument Node: $node');
+            // var attrs = {
+            //   'embed': {
+            //     'type': 'image',
+            //     'source':
+            //         'image:https://firebasestorage.googleapis.com/v0/b/kilmaapp.appspot.com/o/users%2F9ukEt3oZUGUdzHz2JhElKKkGuw42%2Fimages%2FoJ%40VaWlNu%23un(qbvAboqHkBg)%401000.jpeg?alt=media',
+            //   }
+            // };
+            // list['insert'] = '\n';
+            // list['attributes'] = attrs;
+            list = {
+              'insert': '​',
+              'attributes': {
+                'embed': {
+                  'type': 'image',
+                  'source':
+                      'image:https://firebasestorage.googleapis.com/v0/b/kilmaapp.appspot.com/o/users%2F9ukEt3oZUGUdzHz2JhElKKkGuw42%2Fimages%2FoJ%40VaWlNu%23un(qbvAboqHkBg)%401000.jpeg?alt=media',
+                }
+              }
+            };
+            return list;
+          },
+        ),
+      );
       return NotusDocument.fromDelta(d);
+
+      // return NotusDocument.fromJson(NOTUS_DOC_SAMPLE);
     } catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
 }
