@@ -27,7 +27,7 @@ class CustomImageDelegate implements ZefyrImageDelegate<ImageSource> {
 
   @override
   Widget buildImage(BuildContext context, String key) {
-    print('buildImage key: $key');
+    // print('buildImage key: $key');
     // final url = key.replaceFirst('image:', '');
     return Image.network(
         'https://firebasestorage.googleapis.com/v0/b/kilmaapp.appspot.com/o/users%2F9ukEt3oZUGUdzHz2JhElKKkGuw42%2Fimages%2FoJ%40VaWlNu%23un(qbvAboqHkBg)%401000.jpeg?alt=media');

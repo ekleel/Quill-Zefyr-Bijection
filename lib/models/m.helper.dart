@@ -1,9 +1,18 @@
 class QuillZefyrBijectionHelper {
   const QuillZefyrBijectionHelper({
-    this.insertNode,
+    this.handleToZefyrItem,
+    this.handleToQuillEmbeds,
   });
+
+  ///
+  final Map<dynamic, dynamic> Function(
+    Map<dynamic, dynamic> item,
+    dynamic node,
+  ) handleToZefyrItem;
+
+  ///
   final Map<dynamic, dynamic> Function(
     dynamic node,
-    Map<dynamic, dynamic> item,
-  ) insertNode;
+    String source,
+  ) handleToQuillEmbeds;
 }

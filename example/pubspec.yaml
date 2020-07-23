@@ -25,6 +25,7 @@ dependencies:
   quill_zefyr_bijection: 
     path: "../"
   cupertino_icons: ^0.1.2
+  flutter_highlight: ^0.6.0
 
 dev_dependencies:
   flutter_test:

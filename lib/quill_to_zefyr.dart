@@ -1,95 +1,98 @@
 import 'package:quill_delta/quill_delta.dart';
 import 'package:quill_zefyr_bijection/models/m.helper.dart';
+import 'package:quill_zefyr_bijection/utils.dart';
 
 Delta convertIterableToDelta(
   Iterable list, {
   QuillZefyrBijectionHelper helper,
 }) {
-  try {
-    var finalZefyrData = [];
-    list.toList().forEach((quillNode) {
+  var items = [];
+  list.toList().forEach(
+    (node) {
       var item = {};
-      // print(quillNode);
-      var insertNode = quillNode['insert'];
-      var attrNode = quillNode['attributes'];
-      if (attrNode != null) {
-        var finalZefyrAttributes = {};
-        if (attrNode is Map) {
-          attrNode.keys.forEach((attrKey) {
-            /// Already supported
-            if ([
-              'b',
-              'i',
-              'block',
-              'heading',
-              'a',
-            ].contains(attrKey)) {
-              finalZefyrAttributes[attrKey] = attrNode[attrKey];
-            }
 
-            /// Known but not supported
-            else if (['background', 'align'].contains(attrKey)) {
-              print('not sure how to implement background and align' + attrKey);
-            } else {
-              /// General styling
-              if (attrKey == 'bold') {
-                finalZefyrAttributes['b'] = true;
-              } else if (attrKey == 'italic') {
-                finalZefyrAttributes['i'] = true;
-              } else if (attrKey == 'blockquote') {
-                finalZefyrAttributes['block'] = 'quote';
-              } else if (attrKey == 'embed' && attrNode[attrKey]['type'] == 'dots') {
-                finalZefyrAttributes['embed'] = {'type': 'hr'};
+      var nodeInsert = node['insert'];
+      var nodeAttrs = node['attributes'];
+
+      if (nodeAttrs != null) {
+        var attrs = {};
+        if (nodeAttrs is Map) {
+          nodeAttrs.keys.forEach(
+            (key) {
+              /// Already supported
+              if ([
+                'b',
+                'i',
+                'block',
+                'heading',
+                'a',
+              ].contains(key)) {
+                attrs[key] = nodeAttrs[key];
               }
 
-              /// Headers
-              else if (attrKey == 'header') {
-                finalZefyrAttributes['heading'] = attrNode[attrKey] ?? 1;
-              } else if (attrKey == 'h1') {
-                finalZefyrAttributes['heading'] = 1;
-              } else if (attrKey == 'h2') {
-                finalZefyrAttributes['heading'] = 2;
-              } else if (attrKey == 'h3') {
-                finalZefyrAttributes['heading'] = 3;
-              } else if (attrKey == 'h4') {
-                finalZefyrAttributes['heading'] = 3;
-              } else if (attrKey == 'h5') {
-                finalZefyrAttributes['heading'] = 3;
-              } else if (attrKey == 'h6') {
-                finalZefyrAttributes['heading'] = 3;
-              }
+              /// Known but not supported
+              else if (['background', 'align'].contains(key)) {
+                console('ToDelta - background and align not implemented.' + key);
+              } else {
+                /// General styling
+                if (key == 'bold') {
+                  attrs['b'] = true;
+                } else if (key == 'italic') {
+                  attrs['i'] = true;
+                } else if (key == 'blockquote') {
+                  attrs['block'] = 'quote';
+                } else if (key == 'embed' && nodeAttrs[key]['type'] == 'dots') {
+                  attrs['embed'] = {'type': 'hr'};
+                }
 
-              /// Link
-              else if (attrKey == 'link') {
-                finalZefyrAttributes['a'] = attrNode[attrKey] ?? 'n/a';
-              }
+                /// Headers
+                else if (key == 'header') {
+                  attrs['heading'] = nodeAttrs[key] ?? 1;
+                } else if (key == 'h1') {
+                  attrs['heading'] = 1;
+                } else if (key == 'h2') {
+                  attrs['heading'] = 2;
+                } else if (key == 'h3') {
+                  attrs['heading'] = 3;
+                } else if (key == 'h4') {
+                  attrs['heading'] = 3;
+                } else if (key == 'h5') {
+                  attrs['heading'] = 3;
+                } else if (key == 'h6') {
+                  attrs['heading'] = 3;
+                }
 
-              /// List
-              else if (attrKey == 'list') {
-                finalZefyrAttributes['block'] = attrNode[attrKey] == 'bullet' ? 'ul' : 'ol';
-              }
+                /// Link
+                else if (key == 'link') {
+                  attrs['a'] = nodeAttrs[key] ?? 'n/a';
+                }
 
-              /// Not supported
-              else {
-                print('ignoring ' + attrKey);
+                /// List
+                else if (key == 'list') {
+                  attrs['block'] = nodeAttrs[key] == 'bullet' ? 'ul' : 'ol';
+                }
+
+                /// Not supported
+                else {
+                  console('ToDelta - ignoring: $key');
+                }
               }
-            }
-          });
-          if (finalZefyrAttributes.keys.isNotEmpty) item['attributes'] = finalZefyrAttributes;
+            },
+          );
+          if (attrs.keys.isNotEmpty) {
+            item['attributes'] = attrs;
+          }
         }
       }
-      if (insertNode != null) {
-        bool addPreBreak = false;
-        bool addBreak = false;
-
+      if (nodeInsert != null) {
         /// Map embed
-        if (insertNode is Map) {
+        if (nodeInsert is Map) {
           /// Image
-          if (insertNode.containsKey('image')) {
-            final image = insertNode['image'];
+          if (nodeInsert.containsKey('image')) {
+            final image = nodeInsert['image'];
             if (image is String) {
               item = {
-                'insert': '​',
+                'insert': '​\n',
                 'attributes': {
                   'embed': {
                     'type': 'image',
@@ -97,52 +100,38 @@ Delta convertIterableToDelta(
                   }
                 }
               };
-              addBreak = true;
             }
           }
 
           /// Divider
-          else if (insertNode.containsKey('divider')) {
+          else if (nodeInsert.containsKey('divider')) {
             item = {
-              'insert': '​',
+              'insert': '​\n',
               'attributes': {
                 'embed': {'type': 'hr'}
               }
             };
-            addBreak = true;
           }
         }
 
         /// String embed
         else {
-          item['insert'] = insertNode;
+          item['insert'] = nodeInsert;
         }
 
-        if (item['insert'] == null && helper != null) {
-          item = helper.insertNode(insertNode, item);
-          addBreak = true;
+        /// Call helper
+        if (helper != null && item['insert'] == null) {
+          item = helper.handleToZefyrItem(item, nodeInsert);
         }
 
         if (item['insert'] != null) {
-          if (addPreBreak) {
-            finalZefyrData.add({'insert': ''});
-          }
-
-          finalZefyrData.add(item);
-
-          if (addBreak) {
-            finalZefyrData.add({'insert': '\n'});
-          }
+          items.add(item);
         } else {
-          print('Not Valid: $insertNode');
+          console('ToDelta - Not Valid: $nodeInsert');
         }
       }
-    });
+    },
+  );
 
-    // print('finalZefyrData: $finalZefyrData');
-
-    return Delta.fromJson(finalZefyrData);
-  } catch (e) {
-    rethrow;
-  }
+  return Delta.fromJson(items);
 }
