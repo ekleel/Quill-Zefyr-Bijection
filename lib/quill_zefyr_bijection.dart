@@ -44,7 +44,7 @@ class QuillZefyrBijection {
   }
 
   /// Returns quill json from zefyr delta
-  static String convertDeltaIterableToQuillJSON(
+  static Future<String> convertDeltaIterableToQuillJSON(
     Delta delta, {
     QuillZefyrBijectionHelper helper,
   }) {

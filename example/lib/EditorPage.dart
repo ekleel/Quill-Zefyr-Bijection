@@ -39,11 +39,11 @@ class EditorPageState extends State<EditorPage> {
     _focusNode = FocusNode();
   }
 
-  void _updateDebugCode() {
+  void _updateDebugCode() async {
     String str;
 
     if (_debugJson) {
-      final jsonStr = QuillZefyrBijection.convertDeltaIterableToQuillJSON(
+      final jsonStr = await QuillZefyrBijection.convertDeltaIterableToQuillJSON(
         _controller.document.toDelta(),
         helper: QuillZefyrBijectionHelper(
           handleToQuillEmbeds: (node, item) {
