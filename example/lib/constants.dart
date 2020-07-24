@@ -190,7 +190,7 @@ const QUILL_TO_ZEFYR_COMPLEX_JSON_2 = {
     {
       "insert": {"tweet": "1162004768367058944"}
     },
-    {"insert": "التوسع�� ا��سعودية ا��أولى"},
+    {"insert": "التوسع���� ا��سعودية ا��أولى"},
     {
       "attributes": {"h4": true},
       "insert": "\n"
