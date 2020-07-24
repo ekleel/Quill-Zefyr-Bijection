@@ -44,7 +44,7 @@ Future<String> convertIterableToQuillJSON(
 
         /// Heading
         else if (key == 'heading') {
-          attrs['header'] = nodeAttrs[key] ?? 1;
+          attrs['h${nodeAttrs[key] ?? 1}'] = true;
         }
 
         /// Embeds
