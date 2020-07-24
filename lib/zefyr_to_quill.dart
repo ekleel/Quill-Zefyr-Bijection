@@ -5,11 +5,12 @@ import 'package:quill_zefyr_bijection/models/m.helper.dart';
 import 'package:quill_zefyr_bijection/utils.dart';
 
 Future<String> convertIterableToQuillJSON(
-  Delta list, {
+  Delta delta, {
   QuillZefyrBijectionHelper helper,
 }) async {
   var items = [];
-  for (final op in list.toList()) {
+  final list = delta.toList();
+  for (final op in list) {
     var item = {};
 
     dynamic nodeInsert = op.data;
@@ -78,7 +79,23 @@ Future<String> convertIterableToQuillJSON(
         item['attributes'] = attrs;
       }
     }
+
     if (nodeInsert != null) {
+      if (nodeInsert is String && nodeInsert.length > 2 && items.isNotEmpty) {
+        final index = items.length - 1;
+        final prev = items[index];
+        if (prev != null && prev["insert"] != null && prev["insert"] is Map) {
+          if (nodeInsert.startsWith('\n')) {
+            final divider = prev["insert"]["divider"];
+            final hasDivider = divider != null && divider == true;
+            if (hasDivider) {
+              console('nodeInsert: $nodeInsert');
+              nodeInsert = nodeInsert.replaceFirst('\n', '');
+            }
+          }
+        }
+      }
+
       item['insert'] = nodeInsert;
 
       items.add(item);
