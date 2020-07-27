@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:quill_delta/quill_delta.dart';
 import 'package:quill_zefyr_bijection/models/m.helper.dart';
+import 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
 import 'package:quill_zefyr_bijection/utils.dart';
 
 Future<String> convertIterableToQuillJSON(
@@ -50,9 +51,12 @@ Future<String> convertIterableToQuillJSON(
 
         /// Embeds
         else if (key == 'embed') {
+          String source = nodeAttrs[key]['source'];
+          source = QuillZefyrBijection.cleanEmbedIndex(source);
+
           /// Image
           if (nodeAttrs[key]['type'] == 'image') {
-            nodeInsert = {'image': nodeAttrs[key]['source']};
+            nodeInsert = {'image': source};
           }
 
           /// Divider
@@ -64,7 +68,7 @@ Future<String> convertIterableToQuillJSON(
           if (helper != null) {
             nodeInsert = await helper.handleToQuillEmbeds(
               nodeInsert,
-              nodeAttrs[key]['source'],
+              source,
             );
           }
         }

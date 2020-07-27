@@ -46,7 +46,25 @@ class EditorPageState extends State<EditorPage> {
       final jsonStr = await QuillZefyrBijection.convertDeltaIterableToQuillJSON(
         _controller.document.toDelta(),
         helper: QuillZefyrBijectionHelper(
-          handleToQuillEmbeds: (node, item) {
+          handleToQuillEmbeds: (node, source) async {
+            /// Image embed which can be a video or tweet.
+            if (node['image'] != null) {
+              /// Video
+              if (source.startsWith('video:')) {
+                node = {'video': source.replaceAll('video:', '')};
+              }
+
+              /// Tweet
+              else if (source.startsWith('tweet:')) {
+                node = {'tweet': source.replaceAll('tweet:', '')};
+              }
+
+              /// Image
+              else if (source.startsWith('image:')) {
+                node = {'image': source.replaceAll('image:', '')};
+              }
+            }
+
             return node;
           },
         ),
@@ -69,11 +87,11 @@ class EditorPageState extends State<EditorPage> {
 
   Delta _getSampleDelta() {
     return QuillZefyrBijection.convertJSONToZefyrDelta(
-      jsonEncode(QUILL_TO_ZEFYR_COMPLEX_JSON),
+      jsonEncode(QUILL_TO_ZEFYR_ISSUE_JSON),
       // QUILL_TO_ZEFYR_SAMPLE,
       helper: QuillZefyrBijectionHelper(
-        handleToZefyrItem: (item, node) {
-          print('helper node: $node');
+        handleToZefyrItem: (item, node, index) {
+          final indexKey = QuillZefyrBijection.getEmbedIndex(index);
 
           /// Image
           if (node['image'] != null && node['image'] is Map) {
@@ -96,7 +114,7 @@ class EditorPageState extends State<EditorPage> {
               'attributes': {
                 'embed': {
                   'type': 'image',
-                  'source': 'video:${node['video']}',
+                  'source': 'video:${node['video']}$indexKey',
                 }
               },
             };
@@ -109,7 +127,7 @@ class EditorPageState extends State<EditorPage> {
               'attributes': {
                 'embed': {
                   'type': 'image',
-                  'source': 'tweet:${node['tweet']}',
+                  'source': 'tweet:${node['tweet']}$indexKey',
                 }
               },
             };

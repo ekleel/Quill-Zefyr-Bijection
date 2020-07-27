@@ -8,6 +8,7 @@ class QuillZefyrBijectionHelper {
   final Map<dynamic, dynamic> Function(
     Map<dynamic, dynamic> item,
     dynamic node,
+    int index,
   ) handleToZefyrItem;
 
   ///

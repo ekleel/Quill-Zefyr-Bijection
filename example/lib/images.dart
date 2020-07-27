@@ -4,6 +4,7 @@
 
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
 import 'package:zefyr/zefyr.dart';
 
 /// Custom image delegate used by this example to load image from application
@@ -27,8 +28,11 @@ class CustomImageDelegate implements ZefyrImageDelegate<ImageSource> {
 
   @override
   Widget buildImage(BuildContext context, String key) {
-    // print('buildImage key: $key');
-    // final url = key.replaceFirst('image:', '');
+    String url = key.replaceFirst('image:', '');
+    url = QuillZefyrBijection.cleanEmbedIndex(url);
+
+    // print('buildImage: $url - $key');
+
     return Image.network(
         'https://firebasestorage.googleapis.com/v0/b/kilmaapp.appspot.com/o/users%2F9ukEt3oZUGUdzHz2JhElKKkGuw42%2Fimages%2FoJ%40VaWlNu%23un(qbvAboqHkBg)%401000.jpeg?alt=media');
 

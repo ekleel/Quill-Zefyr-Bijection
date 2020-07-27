@@ -7,9 +7,10 @@ Delta convertIterableToDelta(
   QuillZefyrBijectionHelper helper,
 }) {
   var items = [];
-  for (final node in list.toList()) {
+  final _list = list.toList();
+  for (final node in _list) {
     var item = {};
-
+    final index = _list.indexOf(node);
     var nodeInsert = node['insert'];
     var nodeAttrs = node['attributes'];
 
@@ -89,12 +90,14 @@ Delta convertIterableToDelta(
         if (nodeInsert.containsKey('image')) {
           final image = nodeInsert['image'];
           if (image is String) {
+            /// Adds an index to fix duplicate embeds
+            /// that don't have a previous line break.
             item = {
               'insert': '​\n',
               'attributes': {
                 'embed': {
                   'type': 'image',
-                  'source': image,
+                  'source': '$image|-[$index]-|',
                 }
               }
             };
@@ -119,7 +122,7 @@ Delta convertIterableToDelta(
 
       /// Call helper
       if (helper != null && item['insert'] == null) {
-        item = helper.handleToZefyrItem(item, nodeInsert);
+        item = helper.handleToZefyrItem(item, nodeInsert, index);
       }
 
       if (item['insert'] != null) {
@@ -131,9 +134,41 @@ Delta convertIterableToDelta(
   }
 
   final delta = Delta.fromJson(items);
-
   // check if delta does not end with a line break
   if (!delta.last.data.endsWith('\n')) delta.insert('\n');
 
-  return delta;
+  final dList = delta.toList();
+  Delta fDelta;
+
+  if (dList.length > 1) {
+    fDelta = Delta();
+    for (final op in dList) {
+      final index = dList.indexOf(op);
+
+      /// Check if item is an embed and the previous item
+      /// does not end with a line break.
+      if (index > 1) {
+        if (op.hasAttribute('embed')) {
+          final prev = dList[index - 1];
+          if (prev.isEmpty || !prev.data.endsWith('\n')) {
+            fDelta.insert('\n');
+          }
+        }
+      }
+
+      fDelta.push(op);
+    }
+  }
+
+  return fDelta ?? delta;
 }
+
+// console('ToDelta - attribute:', map: {
+//   'index': index,
+//   'prev_cond': prev.isEmpty.toString(),
+//   'prev_value': prev.data,
+//   'current': op.attributes,
+// });
+
+/// TODO:
+/// * Fix duplicate embeds, ex: two tweets after each other.

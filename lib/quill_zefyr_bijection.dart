@@ -57,4 +57,24 @@ class QuillZefyrBijection {
       rethrow;
     }
   }
+
+  static String get embedIndexStart => '|-[';
+  static String get embedIndexEnd => ']-|';
+
+  /// Adds embed index which is added to fix duplicate
+  /// embeds that don't have a previous line break.
+  static String getEmbedIndex(int index) {
+    return '$embedIndexStart$index$embedIndexEnd';
+  }
+
+  /// Removes embed index injection which is added to
+  /// fix duplicate embeds that don't have a previous line break.
+  static String cleanEmbedIndex(String key) {
+    if (key.contains(embedIndexStart)) {
+      final start = key.indexOf(embedIndexStart);
+      final end = key.indexOf(embedIndexEnd) + embedIndexEnd.length;
+      key = key.replaceRange(start, end, '');
+    }
+    return key;
+  }
 }

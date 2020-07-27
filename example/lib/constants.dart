@@ -190,7 +190,7 @@ const QUILL_TO_ZEFYR_COMPLEX_JSON_2 = {
     {
       "insert": {"tweet": "1162004768367058944"}
     },
-    {"insert": "التوسع���� ا��سعودية ا��أولى"},
+    {"insert": "التوسع������������� ا��سعودية ا��أولى"},
     {
       "attributes": {"h4": true},
       "insert": "\n"
@@ -384,3 +384,55 @@ const NOTUS_DOC_SAMPLE = [
   },
   {'insert': '\n\n\n'}
 ];
+
+const QUILL_TO_ZEFYR_NOISSUE_JSON = {
+  "ops": [
+    {"insert": "السلام عليكم..\n"},
+    {
+      "insert": {"tweet": "1282747519626350592"}
+    },
+    {"insert": "مرحباً\nأهلًا..\n"},
+    {
+      "insert": {"video": "https://www.youtube.com/embed/bczyP-kDwSA"}
+    },
+    {
+      "insert": {"video": "https://www.youtube.com/embed/bczyP-kDwSA"}
+    },
+    {"insert": "رائع جدا!"},
+    {
+      "insert": {"divider": true}
+    },
+    {
+      "insert": {"tweet": "1282747893447823361"}
+    },
+    {
+      "insert": {"video": "https://www.youtube.com/embed/8ElKxTfHdWo"}
+    },
+    {"insert": "شكرا لك\n"}
+  ]
+};
+
+const QUILL_TO_ZEFYR_ISSUE_JSON = {
+  "ops": [
+    {"insert": "السلام عليكم..\n"},
+    {
+      "insert": {"tweet": "1282747519626350592"}
+    },
+    {"insert": "مرحباً\nأهلًا..\n"},
+    {
+      "insert": {"video": "https://www.youtube.com/embed/bczyP-kDwSA"}
+    },
+    {"insert": "رائع جدا!\n"},
+    {
+      "insert": {"tweet": "1282747519626350592"}
+    },
+    {"insert": "نص خطير جداً"},
+    {
+      "insert": {"tweet": "1282747519626350592"}
+    },
+    {
+      "insert": {"video": "https://www.youtube.com/embed/8ElKxTfHdWo"}
+    },
+    {"insert": "شكرا لك\n"}
+  ]
+};
