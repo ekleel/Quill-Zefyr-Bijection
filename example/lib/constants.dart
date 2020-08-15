@@ -190,7 +190,7 @@ const QUILL_TO_ZEFYR_COMPLEX_JSON_2 = {
     {
       "insert": {"tweet": "1162004768367058944"}
     },
-    {"insert": "التوسع������������� ا��سعودية ا��أولى"},
+    {"insert": "التوسع��������������� ا��سعودية ا��أولى"},
     {
       "attributes": {"h4": true},
       "insert": "\n"
@@ -422,17 +422,29 @@ const QUILL_TO_ZEFYR_ISSUE_JSON = {
     {
       "insert": {"video": "https://www.youtube.com/embed/bczyP-kDwSA"}
     },
-    {"insert": "رائع جدا!\n"},
+    {"insert": "رائع جدا!"},
     {
-      "insert": {"tweet": "1282747519626350592"}
+      "attributes": {"h1": true},
+      "insert": "\n"
     },
-    {"insert": "نص خطير جداً"},
     {
-      "insert": {"tweet": "1282747519626350592"}
+      "insert": {"tweet": "1282747893447823361"}
+    },
+    {"insert": "شكراً لكم!"},
+    {
+      "attributes": {"h1": true},
+      "insert": "\n"
+    },
+    {
+      "insert": {"tweet": "1282747893447823361"}
+    },
+    {"insert": "نص خطير جداً\n"},
+    {
+      "insert": {"tweet": "1282747893447823361"}
     },
     {
       "insert": {"video": "https://www.youtube.com/embed/8ElKxTfHdWo"}
     },
-    {"insert": "شكرا لك\n"}
+    {"insert": "شكرا لكً......\n"}
   ]
 };
