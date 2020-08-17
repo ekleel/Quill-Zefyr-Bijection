@@ -264,6 +264,12 @@ const NOTUS_DOC_SAMPLE = [
   },
   {'insert': '\n'},
   {
+    "insert": "​\n",
+    "attributes": {
+      "embed": {"type": "hr"}
+    }
+  },
+  {
     'insert': '​',
     'attributes': {
       'embed': {'type': 'image', 'source': 'asset://assets/images/breeze.jpg'}
@@ -448,3 +454,24 @@ const QUILL_TO_ZEFYR_ISSUE_JSON = {
     {"insert": "شكرا لكً......\n"}
   ]
 };
+
+const QUILL_TO_ZEFYR_HAS_ISSUE = {
+  "ops": [
+    {"insert": "شيي شيي شيي شيي شيي شيي شيي شيي شيي شيي شيي شيي شيي شسي..\nي شسيشسيشس\n"},
+    {
+      "insert": {"divider": true}
+    },
+    {"insert": "شسيشسيشسي\n"}
+  ]
+};
+
+const ZEFYR_TO_QUILL_HAS_ISSUE = [
+  {"insert": "شيي شيي شيي شيي شيي شيي شيي شيي شيي شيي شيي شيي شيي شسي..\nي\nييي"},
+  {
+    "insert": "​\n",
+    "attributes": {
+      "embed": {"type": "hr"}
+    }
+  },
+  {"insert": "\n"}
+];

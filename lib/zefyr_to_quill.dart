@@ -88,12 +88,12 @@ Future<String> convertIterableToQuillJSON(
       if (nodeInsert is String && nodeInsert.length > 2 && items.isNotEmpty) {
         final index = items.length - 1;
         final prev = items[index];
+
         if (prev != null && prev["insert"] != null && prev["insert"] is Map) {
           if (nodeInsert.startsWith('\n')) {
             final divider = prev["insert"]["divider"];
             final hasDivider = divider != null && divider == true;
             if (hasDivider) {
-              console('nodeInsert: $nodeInsert');
               nodeInsert = nodeInsert.replaceFirst('\n', '');
             }
           }

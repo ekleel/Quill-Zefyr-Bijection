@@ -37,6 +37,10 @@ class EditorPageState extends State<EditorPage> {
     final document = _loadDocument();
     _controller = ZefyrController(document);
     _focusNode = FocusNode();
+
+    _controller.document.changes.listen((change) {
+      print('change: ${change.change}');
+    });
   }
 
   void _updateDebugCode() async {
@@ -86,8 +90,9 @@ class EditorPageState extends State<EditorPage> {
   }
 
   Delta _getSampleDelta() {
+    return Delta.fromJson(NOTUS_DOC_SAMPLE);
     return QuillZefyrBijection.convertJSONToZefyrDelta(
-      jsonEncode(QUILL_TO_ZEFYR_ISSUE_JSON),
+      jsonEncode(QUILL_TO_ZEFYR_HAS_ISSUE),
       // QUILL_TO_ZEFYR_SAMPLE,
       helper: QuillZefyrBijectionHelper(
         handleToZefyrItem: (item, node, index) {

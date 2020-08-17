@@ -156,6 +156,17 @@ Delta convertIterableToDelta(
         }
       }
 
+      /// Adds a line break at the end of the previous item.
+      if (op.hasAttribute('embed')) {
+        if (op.attributes["embed"]["type"] != null && op.attributes["embed"]["type"] == 'hr') {
+          final list = fDelta.toList();
+          final prev = list[list.length - 1];
+          if (prev.isNotEmpty && !prev.data.endsWith('\n')) {
+            fDelta.insert('\n');
+          }
+        }
+      }
+
       fDelta.push(op);
     }
   }
