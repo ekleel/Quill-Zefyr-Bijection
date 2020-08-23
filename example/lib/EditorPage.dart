@@ -90,7 +90,7 @@ class EditorPageState extends State<EditorPage> {
   }
 
   Delta _getSampleDelta() {
-    return Delta.fromJson(NOTUS_DOC_SAMPLE);
+    // return Delta.fromJson(NOTUS_DOC_SAMPLE);
     return QuillZefyrBijection.convertJSONToZefyrDelta(
       jsonEncode(QUILL_TO_ZEFYR_HAS_ISSUE),
       // QUILL_TO_ZEFYR_SAMPLE,

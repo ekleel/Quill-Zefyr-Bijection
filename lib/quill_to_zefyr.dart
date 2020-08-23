@@ -160,9 +160,12 @@ Delta convertIterableToDelta(
       if (op.hasAttribute('embed')) {
         if (op.attributes["embed"]["type"] != null && op.attributes["embed"]["type"] == 'hr') {
           final list = fDelta.toList();
-          final prev = list[list.length - 1];
-          if (prev.isNotEmpty && !prev.data.endsWith('\n')) {
-            fDelta.insert('\n');
+          if (list.isNotEmpty) {
+            console('list: $list');
+            final prev = list[list.length - 1];
+            if (prev.isNotEmpty && !prev.data.endsWith('\n')) {
+              fDelta.insert('\n');
+            }
           }
         }
       }
