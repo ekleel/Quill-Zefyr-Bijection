@@ -19,13 +19,20 @@ dependencies:
     git:
       url: git://github.com/ekleel/zefyr.git
       path: "packages/zefyr"
-      ref: 7ae1d62e1887e5878ad1fe511270c6022ca3e874
+      ref: 0600d67c385633b275a7b800f9f3f59ca7091d87
       # ref: b31e59c4bf953a74b2331fb473e3aa83fc9461a1
         # -- for stable
   quill_zefyr_bijection: 
     path: "../"
   cupertino_icons: ^0.1.2
   flutter_highlight: ^0.6.0
+
+dependency_overrides:
+  notus:
+    git:
+      url: git://github.com/ekleel/zefyr.git
+      path: "packages/notus"
+      ref: 0600d67c385633b275a7b800f9f3f59ca7091d87
 
 dev_dependencies:
   flutter_test:
