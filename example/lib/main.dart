@@ -8,7 +8,7 @@ void main() {
   /// Ensures channels are initialized.
   WidgetsFlutterBinding.ensureInitialized();
 
-  RendererBinding.instance.initPersistentFrameCallback();
+  // RendererBinding.instance.initPersistentFrameCallback();
 
   runApp(MyApp());
 }

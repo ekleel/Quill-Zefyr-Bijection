@@ -1,6 +1,7 @@
 analyzer:
   errors:
     todo: ignore
+    invalid_dependency: ignore
     unused_import: warning
     unused_local_variable: warning
     dead_code: warning
@@ -57,7 +58,7 @@ linter:
     - prefer_typing_uninitialized_variables
     - recursive_getters
     - slash_for_doc_comments
-    - sort_pub_dependencies
+    # - sort_pub_dependencies
     - test_types_in_equals
     - throw_in_finally
     - type_init_formals

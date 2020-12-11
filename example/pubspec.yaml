@@ -13,26 +13,26 @@ dependencies:
   
   image_picker: 0.6.6+5
   
-  quill_delta: ^1.0.2
-  # zefyr: ^0.10.0
-  zefyr:
-    git:
-      url: git://github.com/ekleel/zefyr.git
-      path: "packages/zefyr"
-      ref: 0600d67c385633b275a7b800f9f3f59ca7091d87
-      # ref: b31e59c4bf953a74b2331fb473e3aa83fc9461a1
-        # -- for stable
+  quill_delta: ^2.0.0
+  zefyr: 1.0.0-dev.2.0
+  # zefyr:
+  #   git:
+  #     url: git://github.com/ekleel/zefyr.git
+  #     path: "packages/zefyr"
+  #     ref: 0600d67c385633b275a7b800f9f3f59ca7091d87
+  #     # ref: b31e59c4bf953a74b2331fb473e3aa83fc9461a1
+  #       # -- for stable
   quill_zefyr_bijection: 
     path: "../"
   cupertino_icons: ^0.1.2
   flutter_highlight: ^0.6.0
 
 dependency_overrides:
-  notus:
-    git:
-      url: git://github.com/ekleel/zefyr.git
-      path: "packages/notus"
-      ref: 0600d67c385633b275a7b800f9f3f59ca7091d87
+  # notus:
+  #   git:
+  #     url: git://github.com/ekleel/zefyr.git
+  #     path: "packages/notus"
+  #     ref: 0600d67c385633b275a7b800f9f3f59ca7091d87
 
 dev_dependencies:
   flutter_test:
