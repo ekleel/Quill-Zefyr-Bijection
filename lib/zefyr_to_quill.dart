@@ -5,10 +5,14 @@ import 'package:quill_zefyr_bijection/models/m.helper.dart';
 import 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
 import 'package:quill_zefyr_bijection/utils.dart';
 
+import 'utils.dart';
+
 Future<String> convertIterableToQuillJSON(
   Delta delta, {
   QuillZefyrBijectionHelper helper,
 }) async {
+  // console('convertIterableToQuillJSON - delta:', map: delta);
+
   var items = [];
   final list = delta.toList();
   for (final op in list) {
@@ -16,6 +20,11 @@ Future<String> convertIterableToQuillJSON(
 
     dynamic nodeInsert = op.data;
     var nodeAttrs = op.attributes;
+
+    // console('convertIterableToQuillJSON - ${op.key}:', map: {
+    //   'nodeInsert': nodeInsert,
+    //   'nodeAttrs': nodeAttrs,
+    // });
 
     if (nodeAttrs != null) {
       var attrs = {};
@@ -49,30 +58,6 @@ Future<String> convertIterableToQuillJSON(
           attrs['h${nodeAttrs[key] ?? 1}'] = true;
         }
 
-        /// Embeds
-        else if (key == 'embed') {
-          String source = nodeAttrs[key]['source'];
-          source = QuillZefyrBijection.cleanEmbedIndex(source);
-
-          /// Image
-          if (nodeAttrs[key]['type'] == 'image') {
-            nodeInsert = {'image': source};
-          }
-
-          /// Divider
-          else if (nodeAttrs[key]['type'] == 'hr') {
-            nodeInsert = {'divider': true};
-          }
-
-          /// Call helper
-          if (helper != null) {
-            nodeInsert = await helper.handleToQuillEmbeds(
-              nodeInsert,
-              source,
-            );
-          }
-        }
-
         /// Not supported
         else {
           console('ToQuill - ignoring: $key - ${nodeAttrs[key]}');
@@ -100,9 +85,56 @@ Future<String> convertIterableToQuillJSON(
         }
       }
 
+      if (nodeInsert is Map) {
+        final type = nodeInsert['_type'];
+        String source = nodeInsert['source'];
+
+        final prev = items.isNotEmpty ? items[items.length - 1] : null;
+
+        console('convertIterableToQuillJSON:', map: {
+          'type': type,
+          'source': source,
+          'prev': prev,
+        });
+
+        if (prev != null && prev['insert'] is String && prev['insert'] == '\n') {
+          items.removeAt(items.length - 1);
+        }
+
+        /// Divider
+        if (type == 'hr') {
+          nodeInsert = {'divider': true};
+        }
+
+        /// Call helper
+        if (helper != null) {
+          nodeInsert = await helper.handleToQuillEmbeds(
+            nodeInsert,
+            type,
+            source,
+          );
+        }
+      }
+
       item['insert'] = nodeInsert;
 
       items.add(item);
+    }
+  }
+
+  if (items.isNotEmpty && items.last['insert'] is String) {
+    if (items.last['insert'] == '\n') {
+      items.removeAt(items.length - 1);
+    } else if (items.last['insert'].endsWith('\n')) {
+      final value = items[items.length - 1]['insert'] as String;
+      final start = value.lastIndexOf('\n');
+      items.last['insert'] = value.replaceRange(start, start + 1, '');
+      // final matches = '\n\n'.allMatches(value);
+      // console('convertIterableToQuillJSON final:', map: {
+      //   'value': value,
+      //   'start': start,
+      //   'matches': matches.map((m) => m.start).map((i) => i).join(', '),
+      // });
     }
   }
 

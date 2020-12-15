@@ -5,8 +5,8 @@ class QuillZefyrBijectionHelper {
   });
 
   ///
-  final Map<dynamic, dynamic> Function(
-    Map<dynamic, dynamic> item,
+  final Map<String, dynamic> Function(
+    Map<String, dynamic> item,
     dynamic node,
     int index,
   ) handleToZefyrItem;
@@ -14,6 +14,7 @@ class QuillZefyrBijectionHelper {
   ///
   final dynamic Function(
     dynamic node,
+    String type,
     String source,
   ) handleToQuillEmbeds;
 }
