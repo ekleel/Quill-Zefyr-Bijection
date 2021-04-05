@@ -1,7 +1,5 @@
-
 import 'package:flutter/material.dart';
 import 'package:zefyr_quill/EditorPage.dart';
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
@@ -18,4 +16,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
